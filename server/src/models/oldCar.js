@@ -7,6 +7,7 @@ const oldCarsSchema = new mongoose.Schema(
       ref: "user",
       required: true,
     },
+    manufacturer: { type: String, required: true },
     title: { type: String, required: true },
     odometerDistance: { type: String, required: true },
     totalAccident: { type: Number, required: true },

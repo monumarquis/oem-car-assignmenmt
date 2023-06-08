@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #FF0072;
+  --primary-color: #17c06c;
   --primary-light: #faf0f4;
   --white-color: #fff;
   --black-color: #000;
@@ -183,7 +183,7 @@
 .product-grid .product-links li:first-child a,
 .product-grid .product-links li a:hover {
   color: #fff;
-  background-color: #b73493;
+  background-color: #17c06c;
 }
 
 .product-grid .product-content {
@@ -223,11 +223,11 @@
 
 .product-grid .category a:hover,
 .product-grid .title a:hover {
-  color: #b73493;
+  color: #17c06c;
 }
 
 .product-grid .price {
-  color: #b73493;
+  color: #17c06c;
   font-size: 15px;
   font-weight: 600;
 }
@@ -273,7 +273,7 @@
 
 .pagination li:first-child .page-link,
 .pagination li:last-child .page-link {
-  color: #d52c63;
+  color: #17c06c;
   font-size: 30px;
   line-height: 34px;
   font-weight: 400;
@@ -283,18 +283,18 @@
 .pagination li .page-link:focus,
 .pagination li.active .page-link:hover,
 .pagination li.active .page-link {
-  color: #d52c63;
+  color: #17c06c;
   background: transparent;
 }
 
 .pagination li .page-link:before {
   content: '';
-  background-color: #d52c63;
+  background-color: #17c06c;
   height: 100%;
   width: 100%;
   border-radius: 5px;
   border: -6px solid #fff;
-  box-shadow: 0 0 0 3px #d52c63;
+  box-shadow: 0 0 0 3px #17c06c;
   opacity: 0;
   transform: scale(2);
   position: absolute;
@@ -325,10 +325,21 @@
   }
 }
 
-
+.old__car__form select{
+  background-color: #f2faf0;
+  border: 1px solid rgb(167, 166, 166);
+  padding: 0px 10px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-transition: 0.5s;
+  transition: 0.1s;
+  outline: none;
+  height: 50px;
+}
 .old__car__form input,
 .old__car__form textarea {
-  background-color: #faf0f4;
+  background-color: #f2faf0;
   border: 1px solid rgb(167, 166, 166);
   padding: 15px 10px;
   display: block;
@@ -368,14 +379,14 @@
 
 .drag-image p {
   text-align: center;
-  color: #e794d0;
+  color: #5e9177;
   font-size: 25px;
   font-weight: 600;
 }
 
 .drag-image button {
   background-color: #faf3f8;
-  border: 1px ridge #f590bd;
+  border: 1px ridge #17c06c;
   padding: 10px 0;
   width: 20%;
   margin: auto;
@@ -391,7 +402,7 @@
 
 .selected__file {
   background-color: #faf3f8;
-  border: 1px ridge #f590bd;
+  border: 1px ridge #73e4ab;
   width: 70%;
   font-size: 20px;
   font-weight: 500;
@@ -518,7 +529,7 @@
 }
 
 .detail__old{
-  color: #b73493;
+  color: #17c06c;
   font-weight: 600;
   font-style: italic;
 }

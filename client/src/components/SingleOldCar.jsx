@@ -3,7 +3,7 @@ import { RiDeleteBin7Fill } from 'react-icons/ri'
 import { FaRegEdit, FaHeart, FaCartPlus } from 'react-icons/fa'
 import { useRef } from 'react'
 import DeleteAlert from '../pages/DeleteAlert'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 const SingleOldCar = ({ data, page }) => {
@@ -14,9 +14,9 @@ const SingleOldCar = ({ data, page }) => {
     return (
         <div class="old__car-grid">
             <div class="old__car-image">
-                <a href='#' class="image">
+                <Link to={`${data._id}`} class="image">
                     <img src={data.img} alt="img" />
-                </a>
+                </Link>
                 <ul class="old__car-links">
                     <li><div className='old__car__icons' ><FaHeart color="var(--primary-color)" /></div></li>
                     {userId === data.user && <li onClick={() => navigate(`edit/${data._id}`)} ><div className='old__car__icons' ><FaRegEdit color="var(--primary-color)" /></div></li>}
@@ -25,7 +25,7 @@ const SingleOldCar = ({ data, page }) => {
                 </ul>
             </div>
             <div class="old__car-content">
-                <h3 class="title">{data.title} <span className='old-color' >({data.color})</span> </h3>
+                <h3 class="title">{data.manufacturer + " " + data.title} <span className='old-color' >({data.color})</span> </h3>
                 <Flex alignItems='center' justifyContent={"space-between"} >
                     <div class="price"> ₹{data.price}*</div>
                     <Text color="#333" fontSize="16px" >{data.totalBuyers} -Previous Buyers</Text>

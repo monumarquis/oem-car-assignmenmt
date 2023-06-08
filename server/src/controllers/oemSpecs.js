@@ -49,4 +49,16 @@ const FilterOEMcars = async (req, res) => {
   }
 };
 
-module.exports = { getAllOEMCars, FilterOEMcars };
+const getOEMCarModels = async (req, res) => {
+  const { manufacturer } = req.query;
+  if (!manufacturer) return res.status(200).send([]);
+  try {
+    const availabaleCarModels = await oemModel.find({ manufacturer });
+    return res.status(200).send({ cars: availabaleCarModels });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err);
+  }
+};
+
+module.exports = { getAllOEMCars, FilterOEMcars, getOEMCarModels };

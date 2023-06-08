@@ -42,9 +42,10 @@ const uploadCar = async (req, res) => {
       registrationPlace,
       mileage,
       price,
+      manufacturer
     } = req.body;
     if (!imageUrl || !userId)
-      return res.status(404).send({ message: "Please Select Image" });
+      return res.status(400).send({ message: "Please Select Image" });
     if (
       !title ||
       !odometerDistance ||
@@ -53,9 +54,10 @@ const uploadCar = async (req, res) => {
       !totalBuyers ||
       !registrationPlace ||
       !mileage ||
+      !manufacturer ||
       !price
     ) {
-      return res.status(404).send({ message: "Please Fill all the Details" });
+      return res.status(400).send({ message: "Please Fill all the Details" });
     }
     uploadImage(imageUrl)
       .then(async (url) => {
@@ -70,6 +72,7 @@ const uploadCar = async (req, res) => {
           registrationPlace,
           mileage,
           price,
+          manufacturer,
         });
         car.save();
         return res.status(201).send({ message: "Car Added Succesfully" });
@@ -111,30 +114,30 @@ const getAlloldCars = async (req, res) => {
     query = { color: { $regex: color, $options: "i" } };
   }
   try {
-    const x = await oldCarModel.find(query);
-    let allCars = await oldCarModel
+    const allOldCarsCount = await oldCarModel.countDocuments(query);
+    let allOldCars = await oldCarModel
       .find(query)
       .skip((page - 1) * limit)
       .limit(limit);
-      // check If price has
+    // check If price has
     if (priceOrder && priceOrder === "asc") {
-      allCars = allCars.sort((a, b) => {
+      allOldCars = allOldCars.sort((a, b) => {
         return convertPrice(a.price) - convertPrice(b.price);
       });
       return res
         .status(200)
-        .send({ cars: allCars, totalPages: Math.ceil(x.length / 9) });
+        .send({ cars: allOldCars, totalPages: Math.ceil(allOldCarsCount / 9) });
     } else if (priceOrder && priceOrder === "desc") {
-      allCars = allCars.sort((a, b) => {
+      allOldCars = allOldCars.sort((a, b) => {
         return convertPrice(b.price) - convertPrice(a.price);
       });
       return res
         .status(200)
-        .send({ cars: allCars, totalPages: Math.ceil(x.length / 9) });
+        .send({ cars: allOldCars, totalPages: Math.ceil(countDocuments / 9) });
     }
     return res
       .status(200)
-      .send({ cars: allCars, totalPages: Math.ceil(x.length / 9) });
+      .send({ cars: allOldCars, totalPages: Math.ceil(countDocuments / 9) });
   } catch (err) {
     console.log(err);
     return res.status(500).send(err);
@@ -146,7 +149,7 @@ const deleteOldCar = async (req, res) => {
   console.log(id);
 
   try {
-    let doc = await oldCarModel.deleteOne({ _id: id });
+    let deletedOldCar = await oldCarModel.deleteOne({ _id: id });
     return res
       .status(201)
       .send({ message: "Your Listed Cars Deleted Successfully" });
@@ -236,9 +239,22 @@ const getSingleOldCar = async (req, res) => {
   console.log(id);
 
   try {
-    let doc = await oldCarModel.findOne({ _id: id });
+    let SingleOldCar = await oldCarModel.findOne({ _id: id });
     // console.log(doc);
-    return res.status(201).send({ carData: doc });
+    return res.status(200).send({ carData: SingleOldCar });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+const getOldCarSpecs = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  try {
+    let SingleOldCar = await oldCarModel.findOne({ _id: id });
+    // console.log(doc);
+    return res.status(200).send({ carData: SingleOldCar });
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -250,4 +266,5 @@ module.exports = {
   deleteOldCar,
   UpdateOldCar,
   getSingleOldCar,
+  getOldCarSpecs
 };

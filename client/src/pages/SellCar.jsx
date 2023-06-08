@@ -1,6 +1,6 @@
-import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Select, Text, useToast } from '@chakra-ui/react'
 import axios from 'axios';
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,8 @@ const initState = {
 const SellCar = () => {
     const toast = useToast()
     const navigate = useNavigate()
+    const [AvailableModel, setAvailableModel] = useState([])
+    const [manufacturer, setManufacturer] = useState("");
     const [formData, setFormData] = useState(initState);
     const [loading, setLoading] = useState(false)
     const [previewSource, setpreviewSource] = useState("")
@@ -58,7 +60,11 @@ const SellCar = () => {
     const handelForm = async (e) => {
         e.preventDefault();
         // console.log(formData);
-
+        const config = {
+            headers: {
+                authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        };
         let price = formData.price.trim().split(" ")
         if (price.length <= 1) {
             toast({
@@ -72,7 +78,7 @@ const SellCar = () => {
         }
         setLoading(true)
         try {
-            let { message } = await axios.post("https://car-dealer-server-production.up.railway.app/oldCars", { ...formData, imageUrl: previewSource, userId })
+            let { message } = await axios.post("http://localhost:8001/oldCars", { ...formData, imageUrl: previewSource, userId, manufacturer }, config)
             console.log(message);
             toast({
                 title: 'Added Car Successfully',
@@ -95,6 +101,31 @@ const SellCar = () => {
             })
         }
     };
+    const getAllAvailableModels = async () => {
+        console.log("manufacturer");
+        const config = {
+            headers: {
+                authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        };
+        try {
+            let { data } = await axios.get(`http://localhost:8001/cars/carModels?manufacturer=${manufacturer}`, config)
+            // console.log(res)
+            if (data.cars) setAvailableModel(data.cars)
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    useEffect(() => {
+        // console.log("manufacturer");
+        getAllAvailableModels()
+
+    }, [manufacturer])
+    console.log(manufacturer);
+    console.log(AvailableModel);
+
+
     return (
         <section>
 
@@ -102,8 +133,26 @@ const SellCar = () => {
                 <Heading textAlign="center" fontSize="25px">Sell Your Car and Get a Quick Offer</Heading>
                 <Text textAlign="center" fontSize="15px" mb="20px" >Streamline the Selling Process with our Easy-to-Use Car Information Form</Text>
                 <form onSubmit={handelForm} >
-                    <label>Title</label>
-                    <input name='title' onChange={handleChange} value={FormData.title} placeholder='Enter Title' type='text' />
+                    <Flex flexDir={["column", "column", "column", "row", "row"]}  >
+                        <Box w={["100%", "100%", "100%", "50%", "50%"]} >
+                            <label>Manufacturer</label>
+                            <Select name='manufacturer' onChange={({ target: { value } }) => setManufacturer(value)} value={manufacturer} border="1px solid var(--primary-color)" bg="var(--primary-light)" placeholder='Select Manufacturer'  >
+                                <option value="Tesla">Tesla</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Maruti">Maruti</option>
+                                <option value="Ford">Ford</option>
+                            </Select>
+                        </Box>
+                        <Box w={["100%", "100%", "100%", "50%", "50%"]} pl={["0", "0", "0", "10px", "10px"]} >
+                            <label>Title</label>
+                            <Select name='title' onChange={handleChange} value={FormData.title} border="1px solid var(--primary-color)" bg="var(--primary-light)" placeholder='Select Model Name'  >
+                                {AvailableModel && AvailableModel.length > 0 && AvailableModel.map((el) => <option value={el.name}>{el.name}</option>)}
+                            </Select>
+                        </Box>
+                    </Flex>
+
+                    {/* <input name='title' onChange={handleChange} value={FormData.title} placeholder='Enter Title' type='text' /> */}
                     <label>Upload Image Here </label>
                     {files}
                     <div {...getRootProps()} className='drag-image' onClick={open} >

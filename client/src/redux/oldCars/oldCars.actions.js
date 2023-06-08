@@ -8,9 +8,13 @@ export const getAllOldCars = (url) => async (dispatch) => {
   dispatch({
     type: OLD_CARS_REQUEST,
   });
-
+  const config = {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
   try {
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url, config);
     console.log(data);
     return dispatch({
       type: OLD_CARS_SUCCESS,
