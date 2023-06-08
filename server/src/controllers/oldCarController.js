@@ -137,7 +137,7 @@ const getAlloldCars = async (req, res) => {
       .send({ cars: allCars, totalPages: Math.ceil(x.length / 9) });
   } catch (err) {
     console.log(err);
-    return res.status(501).send(err);
+    return res.status(500).send(err);
   }
 };
 
@@ -151,7 +151,7 @@ const deleteOldCar = async (req, res) => {
       .status(201)
       .send({ message: "Your Listed Cars Deleted Successfully" });
   } catch (error) {
-    return res.status(401).send(error);
+    return res.status(500).send(error);
   }
 };
 
@@ -227,7 +227,7 @@ const UpdateOldCar = async (req, res) => {
         .send({ message: "Your Informtion Updated Successfully" });
     }
   } catch (error) {
-    return res.status(401).send(error);
+    return res.status(500).send(error);
   }
 };
 
@@ -240,7 +240,7 @@ const getSingleOldCar = async (req, res) => {
     // console.log(doc);
     return res.status(201).send({ carData: doc });
   } catch (error) {
-    return res.status(401).send(error);
+    return res.status(500).send(error);
   }
 };
 

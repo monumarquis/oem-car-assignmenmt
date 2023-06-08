@@ -2,13 +2,12 @@ const userModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
-const SECRET_REFRESH_TOKEN = process.env.SECRET_REFRESH_TOKEN;
 
 // user Register  Route Logic
 const userSignup = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password)
-    return res.status(403).send({ message: "Please Enter All Credential" });
+    return res.status(400).send({ message: "Please Enter All Credential" });
 
   const exsist = await userModel.findOne({ email });
   if (exsist)
@@ -33,12 +32,12 @@ const userLogin = async (req, res) => {
   console.log(email, password);
 
   if (!email || !password) {
-    return res.status(403).send({ message: "Please Enter All Credentials" });
+    return res.status(400).send({ message: "Please Enter All Credentials" });
   }
   let User = await userModel.findOne({ email });
   if (!User)
     return res
-      .status(403)
+      .status(404)
       .send({ message: "Invalid Details! User Not Found " });
   //    console.log(User)
   try {
@@ -66,7 +65,7 @@ const userLogin = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(401).send({ message: "Invalid Credentials" });
+    return res.status(500).send({ message: err});
   }
 };
 
