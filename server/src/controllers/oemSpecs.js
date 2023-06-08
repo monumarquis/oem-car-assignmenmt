@@ -1,4 +1,4 @@
-const oemModel = require("../models/oem_specs");
+const oemModel = require("../models/oemSpecs");
 
 const getAllOEMCars = async (req, res) => {
   const { page = 1, limit = 9 } = req.query;

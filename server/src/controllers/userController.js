@@ -12,7 +12,7 @@ const userSignup = async (req, res) => {
   const exsist = await userModel.findOne({ email });
   if (exsist)
     return res
-      .status(404)
+      .status(409)
       .send({ message: "User Already Created Try Logging in" });
 
   const hash = bcrypt.hashSync(password, 10);

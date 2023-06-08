@@ -1,33 +1,39 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.moldel");
+const userModel = require("../models/user");
 
 const isAuthenticated = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).send({
-        err: "You are not logged In",
-      });
+  let authToken;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      authToken = req.headers.authorization.split(" ")[1];
+
+      // Verify the JWT Token
+      const decodedtoken = jwt.verify(authToken, process.env.SECRET_TOKEN);
+
+      // Get the user Data from the TOKEN => .select(-password will not include password)
+      let userData = await userModel
+        .findById(decodedtoken._id)
+        .select("-password");
+      if (!userData) {
+        return res.status(401).send({ message: error });
+      } else {
+        req.user = userData;
+        next();
+      }
+    } catch (error) {
+      return res.status(500).send({ message: error });
     }
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      return res.status(400).send({
-        err: "Token not found",
-      });
-    }
-    const decoded = jwt.verify(token, process.env.SECRET);
-    const user = await User.find(decoded.user.id);
-    if (!user) {
-      return res.status(404).send({ err: "User not found" });
-    }
-    req.user = user;
-    next();
-  } catch (error) {
-    console.log(error.message);
-    res.status(503).json({
-      error: "Token is not valid",
-    });
+  }
+
+  if (!authToken) {
+    return res.status(401).send({ message: "Not Authorized" });
   }
 };
 
-module.exports = isAuthenticated;
+module.exports = {
+  isAuthenticated,
+};

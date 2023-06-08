@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllOEMCars, FilterOEMcars } = require("../controllers/oem_specs");
+const { getAllOEMCars, FilterOEMcars } = require("../controllers/oemSpecs");
 const app = express.Router();
 
 
