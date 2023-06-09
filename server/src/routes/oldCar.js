@@ -5,12 +5,15 @@ const {
   UpdateOldCar,
   deleteOldCar,
   getSingleOldCar,
+  getOldCarSpecs,
 } = require("../controllers/oldCarController");
 const app = express.Router();
 
 app.post("/", uploadCar);
 
 app.get("/", getAlloldCars);
+
+app.get("/SingleSpecs/:id", getOldCarSpecs);
 
 app.get("/Single/:id", getSingleOldCar);
 

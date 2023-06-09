@@ -1,5 +1,6 @@
 require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
+const oemModel = require("../models/oemSpecs");
 const oldCarModel = require("../models/oldCar");
 const opts = {
   overwrite: true,
@@ -42,7 +43,7 @@ const uploadCar = async (req, res) => {
       registrationPlace,
       mileage,
       price,
-      manufacturer
+      manufacturer,
     } = req.body;
     if (!imageUrl || !userId)
       return res.status(400).send({ message: "Please Select Image" });
@@ -250,11 +251,17 @@ const getSingleOldCar = async (req, res) => {
 const getOldCarSpecs = async (req, res) => {
   const { id } = req.params;
   console.log(id);
-
   try {
-    let SingleOldCar = await oldCarModel.findOne({ _id: id });
-    // console.log(doc);
-    return res.status(200).send({ carData: SingleOldCar });
+    let OldCarSpecs = await oldCarModel.findById(id);
+    console.log(OldCarSpecs);
+    let OemCarSpecs = await oemModel.findOne({
+      manufacturer: OldCarSpecs.manufacturer,
+      name: OldCarSpecs.title,
+    });
+    console.log(OemCarSpecs);
+    return res
+      .status(200)
+      .send({ oldCarData: OldCarSpecs, oemCarData: OemCarSpecs });
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -266,5 +273,5 @@ module.exports = {
   deleteOldCar,
   UpdateOldCar,
   getSingleOldCar,
-  getOldCarSpecs
+  getOldCarSpecs,
 };
